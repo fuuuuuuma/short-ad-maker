@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Short Ad Maker Brief",
+  "type": "object",
+  "required": ["product", "goal", "audience", "duration_seconds", "platform", "casting"],
+  "properties": {
+    "product": { "type": "string", "minLength": 1 },
+    "goal": { "enum": ["awareness", "consideration", "purchase", "booking", "signup"] },
+    "audience": { "type": "string", "minLength": 1 },
+    "duration_seconds": { "type": "integer", "minimum": 6, "maximum": 60 },
+    "platform": { "enum": ["reels", "tiktok", "youtube-shorts", "multi"] },
+    "casting": { "enum": ["female", "male", "faceless", "auto"] },
+    "voice": { "type": "string" },
+    "product_source": { "type": "string" },
+    "confirmed_claims": { "type": "array", "items": { "type": "string" } },
+    "call_to_action": { "type": "string" }
+  },
+  "additionalProperties": true
+}

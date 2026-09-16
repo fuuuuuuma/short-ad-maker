@@ -1,0 +1,7 @@
+interface:
+  display_name: "Short Ad Maker"
+  short_description: "商品から縦型広告ショートを企画・生成・編集しMP4まで自動制作"
+  brand_color: "#D61F69"
+  default_prompt: "Use $short-ad-maker to 商品画像または説明から縦型広告ショートをMP4まで制作してください。"
+policy:
+  allow_implicit_invocation: true

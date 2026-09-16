@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Short Ad Makerの使い方と縦型広告ショートの制作ガイド">
+  <title>Short Ad Maker — 縦型広告ショート制作ガイド</title>
+  <style>
+    :root {
+      --paper:#fff; --ink:#171717; --muted:#667085; --line:#dfe3e8;
+      --soft:#f5f6f8; --accent:#d61f69; --accent-soft:#fff0f6; --max:1120px;
+    }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body {
+      margin:0; background:var(--paper); color:var(--ink); line-height:1.75;
+      font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic UI","Yu Gothic","Noto Sans JP",sans-serif;
+      text-rendering:optimizeLegibility;
+    }
+    a { color:inherit; text-underline-offset:4px; }
+    a:hover { color:var(--accent); }
+    a:focus-visible,button:focus-visible { outline:3px solid #f5a4c5; outline-offset:3px; }
+    code,pre { font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace; }
+    .wrap { width:min(calc(100% - 40px),var(--max)); margin-inline:auto; }
+    .site-header {
+      position:sticky; top:0; z-index:10; background:rgba(255,255,255,.96);
+      border-bottom:1px solid var(--line);
+    }
+    .nav { min-height:64px; display:flex; align-items:center; justify-content:space-between; gap:24px; }
+    .brand { display:inline-flex; align-items:center; gap:10px; font-weight:800; text-decoration:none; }
+    .brand-mark { width:14px; height:24px; border:2px solid var(--ink); border-radius:4px; position:relative; }
+    .brand-mark::after { content:""; position:absolute; width:5px; height:5px; border-radius:50%; background:var(--accent); right:-4px; top:-4px; }
+    .nav-links { display:flex; gap:22px; font-size:13px; font-weight:700; }
+    .nav-links a { text-decoration:none; }
+    .hero { padding:86px 0 82px; border-bottom:1px solid var(--line); }
+    .hero-grid { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(300px,.8fr); gap:72px; align-items:center; }
+    .kicker { display:flex; gap:10px; align-items:center; color:var(--accent); font-size:14px; font-weight:800; margin:0 0 18px; }
+    .kicker::before { content:""; width:28px; height:2px; background:currentColor; }
+    h1 { font-size:clamp(42px,7vw,82px); line-height:1.08; letter-spacing:-.055em; margin:0; max-width:780px; }
+    .lead { font-size:clamp(17px,2vw,22px); line-height:1.8; color:#3f4651; max-width:700px; margin:28px 0 0; }
+    .hero-actions { display:flex; gap:12px; flex-wrap:wrap; margin-top:34px; }
+    .button {
+      display:inline-flex; align-items:center; justify-content:center; min-height:46px; padding:0 20px;
+      border:1px solid var(--ink); font-weight:800; text-decoration:none; background:var(--ink); color:#fff;
+    }
+    .button:hover { background:var(--accent); border-color:var(--accent); color:#fff; }
+    .button.secondary { background:#fff; color:var(--ink); }
+    .micro { margin-top:18px; color:var(--muted); font-size:13px; }
+    .phone { width:min(330px,100%); margin-inline:auto; border:2px solid var(--ink); border-radius:32px; padding:12px; background:#fff; box-shadow:14px 14px 0 var(--soft); }
+    .phone-screen { min-height:590px; border:1px solid var(--line); border-radius:22px; overflow:hidden; display:grid; grid-template-rows:1.2fr 2.8fr 2.2fr 1.4fr; background:#fafafa; }
+    .beat { position:relative; padding:20px 18px; display:flex; flex-direction:column; justify-content:flex-end; border-bottom:1px solid #fff; }
+    .beat::before { content:attr(data-time); position:absolute; top:14px; left:16px; font-size:12px; font-weight:800; color:var(--muted); }
+    .beat strong { font-size:23px; line-height:1.35; letter-spacing:-.02em; }
+    .beat span { color:var(--muted); font-size:13px; margin-top:5px; }
+    .beat.hook { background:var(--accent-soft); }
+    .beat.proof { background:#f1f3f5; }
+    .beat.cta { background:var(--ink); color:#fff; border:0; }
+    .beat.cta span,.beat.cta::before { color:#cfd4da; }
+    section { padding:94px 0; border-bottom:1px solid var(--line); }
+    .section-head { display:grid; grid-template-columns:280px 1fr; gap:60px; align-items:start; margin-bottom:52px; }
+    .section-head h2 { margin:0; font-size:clamp(28px,4vw,48px); line-height:1.2; letter-spacing:-.04em; }
+    .section-head p { margin:0; color:#4e5661; font-size:17px; max-width:760px; }
+    .note { border-left:4px solid var(--accent); padding:14px 0 14px 18px; color:#424955; margin-top:28px; }
+    .workflow { display:grid; grid-template-columns:repeat(5,1fr); border-top:2px solid var(--ink); }
+    .step { padding:22px 20px 26px 0; border-right:1px solid var(--line); min-height:190px; }
+    .step + .step { padding-left:20px; }
+    .step:last-child { border-right:0; }
+    .step b { display:block; font-size:13px; color:var(--accent); margin-bottom:22px; }
+    .step h3 { margin:0 0 10px; font-size:18px; }
+    .step p { margin:0; color:var(--muted); font-size:14px; }
+    .factor-list { display:grid; grid-template-columns:1fr 1fr; gap:0 56px; }
+    .factor { display:grid; grid-template-columns:48px 1fr; gap:16px; padding:22px 0; border-top:1px solid var(--line); }
+    .factor:nth-child(-n+2) { border-top:2px solid var(--ink); }
+    .factor .index { color:var(--accent); font-weight:900; }
+    .factor h3 { font-size:19px; margin:0 0 6px; }
+    .factor p { color:var(--muted); font-size:14px; margin:0; }
+    .casting { display:grid; grid-template-columns:repeat(3,1fr); border:1px solid var(--line); }
+    .cast { padding:30px; border-right:1px solid var(--line); }
+    .cast:last-child { border-right:0; }
+    .cast-icon { height:112px; display:grid; place-items:center; margin-bottom:18px; background:var(--soft); }
+    .cast-icon svg { width:84px; height:84px; }
+    .cast h3 { font-size:22px; margin:0 0 14px; }
+    .cast p { color:var(--muted); font-size:14px; margin:0 0 14px; }
+    .cast ul { margin:0; padding-left:1.2em; font-size:14px; }
+    .cast li + li { margin-top:7px; }
+    .compare { width:100%; border-collapse:collapse; border-top:2px solid var(--ink); }
+    .compare th,.compare td { padding:18px 16px; text-align:left; vertical-align:top; border-bottom:1px solid var(--line); }
+    .compare th { width:20%; font-size:14px; }
+    .compare td { color:#4e5661; font-size:14px; }
+    .bad { color:#9c1b1b; font-weight:800; }
+    .good { color:#176b45; font-weight:800; }
+    .quality-grid { display:grid; grid-template-columns:1fr 1fr; gap:22px 56px; }
+    .quality-group { padding-top:20px; border-top:2px solid var(--ink); }
+    .quality-group h3 { margin:0 0 14px; font-size:19px; }
+    .check { display:flex; gap:10px; align-items:flex-start; padding:8px 0; color:#4e5661; font-size:14px; }
+    .check::before { content:""; flex:0 0 16px; width:16px; height:16px; margin-top:4px; border:2px solid var(--accent); }
+    .install { display:grid; grid-template-columns:.8fr 1.2fr; gap:60px; align-items:start; }
+    .install h2 { margin:0; font-size:clamp(34px,5vw,56px); letter-spacing:-.04em; line-height:1.15; }
+    .install p { color:var(--muted); }
+    .codebox { background:#151515; color:#f8f8f8; padding:24px; position:relative; overflow:auto; }
+    .codebox pre { margin:0; font-size:13px; line-height:1.8; white-space:pre-wrap; }
+    .copy { position:absolute; right:12px; top:12px; border:1px solid #555; background:#232323; color:#fff; padding:7px 10px; font:inherit; font-size:12px; cursor:pointer; }
+    .prompt { margin-top:18px; padding:20px; border:1px solid var(--line); background:#fff; font-size:15px; }
+    .sources { color:var(--muted); font-size:13px; }
+    .sources li + li { margin-top:10px; }
+    footer { padding:38px 0 60px; color:var(--muted); font-size:13px; }
+    .footer-row { display:flex; justify-content:space-between; gap:24px; }
+    @media (max-width:860px) {
+      .nav-links { display:none; }
+      .hero-grid,.section-head,.install { grid-template-columns:1fr; }
+      .hero-grid { gap:54px; }
+      .section-head { gap:18px; }
+      .workflow { grid-template-columns:1fr; border-top:0; }
+      .step,.step + .step { min-height:0; padding:22px 0; border-right:0; border-top:1px solid var(--line); }
+      .step:first-child { border-top:2px solid var(--ink); }
+      .factor-list,.quality-grid { grid-template-columns:1fr; }
+      .factor:nth-child(2) { border-top:1px solid var(--line); }
+      .casting { grid-template-columns:1fr; }
+      .cast { border-right:0; border-bottom:1px solid var(--line); }
+    }
+    @media (max-width:560px) {
+      .wrap { width:min(calc(100% - 28px),var(--max)); }
+      .hero { padding:56px 0 64px; }
+      section { padding:68px 0; }
+      h1 { font-size:44px; }
+      .compare th,.compare td { display:block; width:100%; padding:12px 0; }
+      .compare th { border-bottom:0; padding-top:20px; }
+      .footer-row { flex-direction:column; }
+    }
+    @media print {
+      .site-header,.hero-actions,.copy { display:none; }
+      section,.hero { break-inside:avoid; padding:42px 0; }
+      .phone { box-shadow:none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap nav">
+      <a class="brand" href="#top"><span class="brand-mark" aria-hidden="true"></span>Short Ad Maker</a>
+      <nav class="nav-links" aria-label="ページ内ナビゲーション">
+        <a href="#workflow">作り方</a><a href="#factors">伸びる要因</a><a href="#casting">人物起用</a><a href="#quality">品質基準</a><a href="#install">導入</a>
+      </nav>
+    </div>
+  </header>
+  <main id="top">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <p class="kicker">商品を渡す。MP4が返る。</p>
+          <h1>広告ショートを、迷わず最後まで。</h1>
+          <p class="lead">画像かURL、短い説明が一つあれば開始。企画、AI素材、自然な音声、全文字幕、BGM、効果音、最終検証までを一つのスキルで進めます。</p>
+          <div class="hero-actions"><a class="button" href="#install">インストール方法</a><a class="button secondary" href="#workflow">制作の流れを見る</a></div>
+          <p class="micro">Reels / TikTok / YouTube Shorts対応。公開・広告配信は別工程です。</p>
+        </div>
+        <div class="phone" aria-label="20秒広告ショートの構成例">
+          <div class="phone-screen">
+            <div class="beat hook" data-time="0–3秒"><strong>結果か悩みを<br>最初に見せる</strong><span>説明タイトルから始めない</span></div>
+            <div class="beat" data-time="3–11秒"><strong>商品 → 使用</strong><span>動作を時間順に見せる</span></div>
+            <div class="beat proof" data-time="11–16秒"><strong>見える証拠</strong><span>色・質感・操作・比較</span></div>
+            <div class="beat cta" data-time="16–20秒"><strong>次の行動を一つ</strong><span>保存・詳細・購入・予約</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="workflow">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>入力は少なく、工程は省かない。</h2>
+          <p>簡単さのために品質確認を削るのではなく、迷いやすい判断をスキル側へ移します。ユーザーが決めるのは商品と目的。制作側が構成、画、音、字幕、検証をつなぎます。</p>
+        </div>
+        <div class="workflow">
+          <article class="step"><b>1</b><h3>要点を読む</h3><p>商品、目的、視聴者、使える素材を整理。</p></article>
+          <article class="step"><b>2</b><h3>一本に絞る</h3><p>3秒フックと一つの約束を決定。</p></article>
+          <article class="step"><b>3</b><h3>素材を作る</h3><p>不足ショットだけ生成し、人物と商品を統一。</p></article>
+          <article class="step"><b>4</b><h3>音と字幕</h3><p>元速の自然な声から全文字幕の時刻を取得。</p></article>
+          <article class="step"><b>5</b><h3>検証して納品</h3><p>破綻、権利、デコード、音声終端を確認。</p></article>
+        </div>
+      </div>
+    </section>
+    <section id="factors">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>伸びやすさを支える六つの要因。</h2>
+          <div><p>再生数を保証する公式はありません。ここで扱うのは、離脱を減らし、商品の理解を助け、行動へつなげるための制作要因です。</p><p class="note">テンポは「早口」ではなく、画面の意味が気持ちよく更新されること。</p></div>
+        </div>
+        <div class="factor-list">
+          <article class="factor"><span class="index">01</span><div><h3>0秒から見せる</h3><p>商品、結果、悩みの瞬間。抽象的な前置きを置かない。</p></div></article>
+          <article class="factor"><span class="index">02</span><div><h3>一つだけ約束する</h3><p>一動画一メッセージ。特徴を詰め込みすぎない。</p></div></article>
+          <article class="factor"><span class="index">03</span><div><h3>実演を時間順にする</h3><p>商品→触る→変化。映像が同じ動作へ戻らない。</p></div></article>
+          <article class="factor"><span class="index">04</span><div><h3>画面で証明する</h3><p>色、質感、操作、サイズ。説明より先に視覚で伝える。</p></div></article>
+          <article class="factor"><span class="index">05</span><div><h3>音を聞き疲れさせない</h3><p>自然な声を守り、BGMとSEは意味のある場所に絞る。</p></div></article>
+          <article class="factor"><span class="index">06</span><div><h3>字幕を読ませ切る</h3><p>短く分けても名詞句は分断せず、スマホのUIを避ける。</p></div></article>
+        </div>
+      </div>
+    </section>
+    <section id="casting">
+      <div class="wrap">
+        <div class="section-head"><h2>人物は、商品ではなく視聴者から選ぶ。</h2><p>女性・男性・顔なしのどれが強いかは商材だけでは決まりません。誰の、どの利用場面を、どんな距離感で代弁するかを先に決めます。</p></div>
+        <div class="casting">
+          <article class="cast">
+            <div class="cast-icon" aria-hidden="true"><svg viewBox="0 0 100 100" fill="none" stroke="#171717" stroke-width="2"><circle cx="50" cy="34" r="17"/><path d="M22 87c4-21 14-32 28-32s24 11 28 32"/><path d="M31 35c0-18 8-26 19-26 13 0 21 10 21 28" stroke="#d61f69" stroke-width="5"/></svg></div>
+            <h3>女性を起用</h3><p>美容・生活商材では、手順と仕上がりを同一人物でつなぐと理解しやすい。</p><ul><li>肌や商品色を過加工しない</li><li>ピンクや過剰リアクションを既定にしない</li><li>生活場面に服・声・照明を合わせる</li></ul>
+          </article>
+          <article class="cast">
+            <div class="cast-icon" aria-hidden="true"><svg viewBox="0 0 100 100" fill="none" stroke="#171717" stroke-width="2"><circle cx="50" cy="34" r="17"/><path d="M20 87c5-22 15-32 30-32s25 10 30 32"/><path d="M34 21c7-13 28-14 34 2" stroke="#d61f69" stroke-width="5"/></svg></div>
+            <h3>男性を起用</h3><p>簡単さや初めての不安は、言葉より操作と自然な仕上がりで示す。</p><ul><li>黒・低い声・無骨へ固定しない</li><li>塗布量や所要時間を具体的に見せる</li><li>「男性だから」ではなく利用文脈で語る</li></ul>
+          </article>
+          <article class="cast">
+            <div class="cast-icon" aria-hidden="true"><svg viewBox="0 0 100 100" fill="none" stroke="#171717" stroke-width="2"><rect x="31" y="18" width="38" height="64" rx="8"/><path d="M39 36h22M39 45h15M42 68l7-7 6 5 8-11" stroke="#d61f69" stroke-width="4"/></svg></div>
+            <h3>顔を出さない</h3><p>商品マクロ、POV、手元、環境変化で構成。商品そのものを主役にする。</p><ul><li>最初の1秒で商品か結果を大きく</li><li>手指・反射・ラベルを重点確認</li><li>声と字幕で人格と距離感を作る</li></ul>
+          </article>
+        </div>
+      </div>
+    </section>
+    <section>
+      <div class="wrap">
+        <div class="section-head"><h2>よくある失敗を、工程で止める。</h2><p>見た目の違和感だけでなく、音声の切れ目、字幕の読みづらさ、誇張表現、権利の抜けを納品前に確認します。</p></div>
+        <table class="compare">
+          <tbody>
+            <tr><th>テンポ</th><td><span class="bad">失敗:</span> 1.25倍速＋0.7秒カットを全編に適用</td><td><span class="good">改善:</span> 元速の声を保ち、動作単位で1.2〜2.6秒</td></tr>
+            <tr><th>字幕</th><td><span class="bad">失敗:</span> 商品名や助詞を別画面へ分断</td><td><span class="good">改善:</span> 意味単位、1〜2行、最終音声から時刻取得</td></tr>
+            <tr><th>映像</th><td><span class="bad">失敗:</span> 開封→使用→再び開封へ戻る</td><td><span class="good">改善:</span> 商品→実演→結果を一方向に並べる</td></tr>
+            <tr><th>AI人物</th><td><span class="bad">失敗:</span> 服、顔、手指、容器がカットごとに変化</td><td><span class="good">改善:</span> 参照画像を固定し、疑わしい秒を細分確認</td></tr>
+            <tr><th>広告表現</th><td><span class="bad">失敗:</span> 根拠のない効果・実績・期限を追加</td><td><span class="good">改善:</span> 一次情報と画面で確認できる事実を分ける</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <section id="quality">
+      <div class="wrap">
+        <div class="section-head"><h2>MP4を書き出して終わりにしない。</h2><p>完成条件はファイルが存在することではありません。最後まで再生でき、全文字幕が入り、人物と商品が自然で、権利と事実を確認できることです。</p></div>
+        <div class="quality-grid">
+          <div class="quality-group"><h3>音声</h3><div class="check">文中切断や音節欠けがない</div><div class="check">BGMとSEが声を覆わない</div><div class="check">最後の発話が途中で切れない</div></div>
+          <div class="quality-group"><h3>映像</h3><div class="check">冒頭3秒で価値が見える</div><div class="check">顔・服・容器・手指が連続する</div><div class="check">同じ素材区間を不自然に再利用しない</div></div>
+          <div class="quality-group"><h3>字幕</h3><div class="check">原稿カバー率100%</div><div class="check">最終音声の認識時刻を使用</div><div class="check">商品名、人物、UIを隠さない</div></div>
+          <div class="quality-group"><h3>書き出し</h3><div class="check">縦型の映像と音声ストリーム</div><div class="check">映像と音声の長さが一致</div><div class="check">MP4の全体デコード成功</div></div>
+        </div>
+      </div>
+    </section>
+    <section id="install">
+      <div class="wrap install">
+        <div><h2>一つのスキルとして導入。</h2><p>Skill InstallerでGitHubから取得します。インストール後、新しいターンで商品画像または説明を渡してください。</p></div>
+        <div>
+          <div class="codebox">
+            <button class="copy" type="button" data-copy>コピー</button>
+            <pre id="install-command">python3 ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py \
+  --repo fuuuuuuma/short-ad-maker \
+  --path . \
+  --name short-ad-maker</pre>
+          </div>
+          <div class="prompt"><strong>呼び出し例</strong><br><br>$short-ad-maker この商品画像から20秒の縦型広告を作って。仕事帰りの20〜30代向け、自然なVlog風。MP4まで完成させて。</div>
+        </div>
+      </div>
+    </section>
+    <section>
+      <div class="wrap">
+        <div class="section-head"><h2>参考にした公式資料。</h2><p>仕様や広告ポリシーは変わります。公開・配信時には、各プラットフォームの最新情報を確認してください。</p></div>
+        <ul class="sources">
+          <li><a href="https://www.facebook.com/business/ads/facebook-instagram-reels-ads">Meta for Business — Reels ads</a>：9:16、音声、セーフゾーンを重視。</li>
+          <li><a href="https://support.google.com/google-ads/answer/16041697">Google Ads Help — YouTube Shorts ads</a>：縦型、音あり、social-first、行動目的では10〜30秒を推奨。</li>
+          <li><a href="https://ads.tiktok.com/resources/help/article/creative-center">TikTok for Business — Creative Center</a>：トレンド、Top Ads、制作ガイドの公式参照先。</li>
+          <li><a href="https://ads.tiktok.com/business/library/AUNZ_Creative_Starter_Pack_TakeItToTikTok.pdf">TikTok for Business — Creative Starter Pack 2026</a>：音声と冒頭3〜6秒の重要性を解説。</li>
+        </ul>
+        <p class="micro">確認日: 2026年9月16日。上記は制作原則の参考であり、再生数や広告成果を保証するものではありません。</p>
+      </div>
+    </section>
+  </main>
+  <footer><div class="wrap footer-row"><span>Short Ad Maker</span><span>Skill + Playbook + Quality Gate</span></div></footer>
+  <script>
+    const copyButton=document.querySelector('[data-copy]');
+    copyButton?.addEventListener('click',async()=>{
+      const command=document.querySelector('#install-command')?.textContent??'';
+      try {
+        await navigator.clipboard.writeText(command);
+        copyButton.textContent='コピー済み';
+        window.setTimeout(()=>{copyButton.textContent='コピー';},1600);
+      } catch { copyButton.textContent='選択してコピー'; }
+    });
+  </script>
+</body>
+</html>
