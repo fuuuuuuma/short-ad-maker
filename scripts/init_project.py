@@ -92,6 +92,8 @@ def main() -> int:
         "## Confirmed facts and sources\n",
         encoding="utf-8",
     )
+    (root / "planning" / "narration.txt").write_text("", encoding="utf-8")
+    (root / "work" / "captions" / "final.srt").write_text("", encoding="utf-8")
     receipt = {
         "final_mp4": project["output_path"],
         "caption_coverage": 0.0,
@@ -103,6 +105,11 @@ def main() -> int:
         "rights_checked": False,
         "facts_checked": False,
         "visual_reviewed": False,
+        "audio_components": {
+            "narration": "work/audio/voice.wav",
+            "bgm": "work/audio/bgm.wav",
+            "sfx": "work/audio/sfx.wav"
+        },
     }
     (root / "reports" / "delivery-receipt.json").write_text(
         json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
