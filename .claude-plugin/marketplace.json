@@ -1,0 +1,13 @@
+{
+  "name": "short-ad-maker",
+  "description": "商品から縦型広告ショートをMP4まで作るCodexプラグイン",
+  "owner": {
+    "name": "fuuuuuuma"
+  },
+  "plugins": [
+    {
+      "name": "short-ad-maker",
+      "source": "./plugins/short-ad-maker"
+    }
+  ]
+}

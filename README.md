@@ -1,20 +1,12 @@
 # Short Ad Maker
 
-商品画像・URL・短い説明から、企画、AI素材、ナレーション、全文字幕、BGM、効果音を組み、Reels / TikTok / YouTube Shorts向けの縦型MP4まで仕上げるCodex Skillです。
+商品画像・URL・短い説明から、企画、AI素材、ナレーション、全文字幕、BGM、効果音を組み、Reels / TikTok / YouTube Shorts向けの縦型MP4まで仕上げるCodex Pluginです。
 
 ## インストール
 
-Codexに次のように依頼します。
-
-> `https://github.com/fuuuuuuma/short-ad-maker` のスキルをインストールして
-
-または、Skill Installerを直接実行します。
-
 ```bash
-python3 ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py \
-  --repo fuuuuuuma/short-ad-maker \
-  --path . \
-  --name short-ad-maker
+codex plugin marketplace add fuuuuuuma/short-ad-maker
+codex plugin add short-ad-maker@short-ad-maker
 ```
 
 インストール後は新しいターンで使えます。
@@ -40,23 +32,11 @@ Codexと、次の能力のいずれかを利用できる環境が必要です。
 
 このスキルは特定の生成サービスへ固定せず、利用可能なツールから組み合わせを選びます。外部サービスの利用料や商用利用条件は各サービスに従います。
 
-Skill Installerが導入するのは制作手順と検証ツールです。動画生成サービス、音声生成サービス、各サービスの契約やログイン状態は含みません。環境に応じた3つの動作モードは [runtime-modes.md](references/runtime-modes.md) を参照してください。
+Codex Pluginが導入するのは制作手順と検証ツールです。動画生成サービス、音声生成サービス、各サービスの契約やログイン状態は含みません。環境に応じた3つの動作モードは [runtime-modes.md](plugins/short-ad-maker/skills/short-ad-maker/references/runtime-modes.md) を参照してください。
 
 ## 説明資料
 
-[広告ショート制作ガイド](assets/guide.html) は単一HTMLです。白基調の資料としてブラウザでそのまま開けます。
-
-## インストール確認
-
-リポジトリ公開後、次で別フォルダへ導入テストできます。
-
-```bash
-python3 ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py \
-  --repo fuuuuuuma/short-ad-maker \
-  --path . \
-  --name short-ad-maker \
-  --dest /tmp/short-ad-maker-install-test
-```
+[広告ショート制作ガイド](plugins/short-ad-maker/skills/short-ad-maker/assets/guide.html) は単一HTMLです。白基調の資料としてブラウザでそのまま開けます。
 
 ## ライセンス
 

@@ -182,7 +182,7 @@
       <div class="wrap">
         <div class="section-head">
           <h2>環境に合わせて、三つの作り方。</h2>
-          <p>Skill Installerは制作手順と検証ツールを導入します。生成サービスの契約やログインは含まれません。使える素材とツールに合わせて、完成できるモードを最初に選びます。</p>
+          <p>Codex Pluginは制作手順と検証ツールを導入します。生成サービスの契約やログインは含まれません。使える素材とツールに合わせて、完成できるモードを最初に選びます。</p>
         </div>
         <div class="casting">
           <article class="cast"><h3>フルAI</h3><p>商品画像または説明から開始。</p><ul><li>画像・動画生成</li><li>音声生成と音声認識</li><li>MP4編集</li></ul></article>
@@ -253,14 +253,12 @@
     </section>
     <section id="install">
       <div class="wrap install">
-        <div><h2>一つのスキルとして導入。</h2><p>Skill InstallerでGitHubから取得します。インストール後、新しいターンで商品画像または説明を渡してください。</p></div>
+        <div><h2>一つのプラグインとして導入。</h2><p>Codex Plugin Marketplaceから取得します。インストール後、新しいターンで商品画像または説明を渡してください。</p></div>
         <div>
           <div class="codebox">
             <button class="copy" type="button" data-copy>コピー</button>
-            <pre id="install-command">python3 ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py \
-  --repo fuuuuuuma/short-ad-maker \
-  --path . \
-  --name short-ad-maker</pre>
+            <pre id="install-command">codex plugin marketplace add fuuuuuuma/short-ad-maker
+codex plugin add short-ad-maker@short-ad-maker</pre>
           </div>
           <div class="prompt"><strong>呼び出し例</strong><br><br>$short-ad-maker この商品画像から20秒の縦型広告を作って。仕事帰りの20〜30代向け、自然なVlog風。MP4まで完成させて。</div>
         </div>

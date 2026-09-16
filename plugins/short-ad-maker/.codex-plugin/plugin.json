@@ -1,0 +1,29 @@
+{
+  "name": "short-ad-maker",
+  "version": "1.0.0",
+  "description": "商品画像・URL・説明から、縦型広告ショートを企画・生成・編集し、全文字幕・BGM・SE入りMP4まで仕上げるCodexプラグイン。",
+  "author": {
+    "name": "fuuuuuuma",
+    "url": "https://github.com/fuuuuuuma"
+  },
+  "homepage": "https://fuuuuuuma.github.io/short-ad-maker/",
+  "repository": "https://github.com/fuuuuuuma/short-ad-maker",
+  "license": "MIT",
+  "keywords": ["short-video", "advertising", "reels", "tiktok", "youtube-shorts", "video-editing"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Short Ad Maker",
+    "shortDescription": "商品から縦型広告ショートをMP4まで制作",
+    "longDescription": "商品画像、URL、短い説明から、企画、AI素材、ナレーション、全文字幕、BGM、効果音を組み、Reels、TikTok、YouTube Shorts向けMP4まで仕上げます。",
+    "developerName": "fuuuuuuma",
+    "category": "Productivity",
+    "capabilities": ["Write"],
+    "websiteURL": "https://fuuuuuuma.github.io/short-ad-maker/",
+    "defaultPrompt": [
+      "商品画像から20秒のVlog風広告ショートをMP4まで作って。",
+      "この商品の広告ショートを女性起用で企画から完成まで進めて。",
+      "顔出しなしの縦型商品広告を全文字幕つきで作って。"
+    ],
+    "brandColor": "#D61F69"
+  }
+}

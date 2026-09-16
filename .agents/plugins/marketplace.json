@@ -1,0 +1,20 @@
+{
+  "name": "short-ad-maker",
+  "interface": {
+    "displayName": "Short Ad Maker"
+  },
+  "plugins": [
+    {
+      "name": "short-ad-maker",
+      "source": {
+        "source": "local",
+        "path": "./plugins/short-ad-maker"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
