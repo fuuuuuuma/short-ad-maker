@@ -4,8 +4,10 @@
 from __future__ import annotations
 
 import argparse
+from array import array
 import difflib
 import json
+import math
 import re
 import shutil
 import subprocess
@@ -17,6 +19,7 @@ from typing import Any
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("video", type=Path)
+    parser.add_argument("--clean-video", type=Path, required=True)
     parser.add_argument("--receipt", type=Path, required=True)
     parser.add_argument("--script", type=Path, required=True)
     parser.add_argument("--srt", type=Path, required=True)
@@ -53,18 +56,19 @@ def check_captions(
     srt_path: Path,
     errors: list[str],
     checks: dict[str, Any],
-) -> float:
+) -> tuple[float, list[float]]:
     if not script_path.is_file():
         errors.append(f"narration script not found: {script_path}")
-        return 0.0
+        return 0.0, []
     if not srt_path.is_file():
         errors.append(f"SRT not found: {srt_path}")
-        return 0.0
+        return 0.0, []
     script = normalize_caption_text(script_path.read_text(encoding="utf-8"))
     blocks = re.split(r"\r?\n\s*\r?\n", srt_path.read_text(encoding="utf-8").strip())
     cue_texts: list[str] = []
     previous_end = 0.0
     final_end = 0.0
+    cue_midpoints: list[float] = []
     for number, block in enumerate(blocks, 1):
         lines = [line.strip() for line in block.splitlines() if line.strip()]
         timing_index = next((i for i, line in enumerate(lines) if "-->" in line), -1)
@@ -83,6 +87,7 @@ def check_captions(
             errors.append(f"SRT cue {number} overlaps the previous cue")
         previous_end = end
         final_end = max(final_end, end)
+        cue_midpoints.append((start + end) / 2)
         cue_texts.extend(lines[timing_index + 1:])
     captions = normalize_caption_text("".join(cue_texts))
     ratio = difflib.SequenceMatcher(None, script, captions).ratio() if script else 0.0
@@ -93,7 +98,103 @@ def check_captions(
         errors.append("narration script is empty")
     elif script != captions:
         errors.append(f"caption text does not exactly cover the narration script: {ratio:.1%}")
-    return final_end
+    return final_end, cue_midpoints
+
+
+def decode_audio(ffmpeg: str, path: Path, rate: int = 8000) -> array:
+    completed = subprocess.run(
+        [ffmpeg, "-v", "error", "-i", str(path), "-vn", "-ac", "1", "-ar", str(rate), "-f", "s16le", "-"],
+        check=True,
+        capture_output=True,
+    )
+    samples = array("h")
+    samples.frombytes(completed.stdout)
+    return samples
+
+
+def max_normalized_correlation(left: array, right: array, max_lag: int = 800) -> float:
+    length = min(len(left), len(right))
+    if length < 4000:
+        return 0.0
+    stride = max(1, length // 50000)
+    left_values = [float(left[i]) for i in range(0, length, stride)]
+    right_values = [float(right[i]) for i in range(0, length, stride)]
+    mean_left = sum(left_values) / len(left_values)
+    mean_right = sum(right_values) / len(right_values)
+    left_values = [value - mean_left for value in left_values]
+    right_values = [value - mean_right for value in right_values]
+    lag_limit = max(1, max_lag // stride)
+    lag_step = max(1, 32 // stride)
+    best = 0.0
+    for lag in range(-lag_limit, lag_limit + 1, lag_step):
+        if lag >= 0:
+            a, b = left_values[lag:], right_values[:len(left_values) - lag]
+        else:
+            a, b = left_values[:len(left_values) + lag], right_values[-lag:]
+        if not a or not b:
+            continue
+        dot = sum(x * y for x, y in zip(a, b))
+        norm = math.sqrt(sum(x * x for x in a) * sum(y * y for y in b))
+        if norm:
+            best = max(best, abs(dot / norm))
+    return best
+
+
+def check_audio_mix(
+    ffmpeg: str,
+    final_video: Path,
+    components: list[Path],
+    errors: list[str],
+    checks: dict[str, Any],
+) -> None:
+    final_audio = decode_audio(ffmpeg, final_video)
+    correlations: dict[str, float] = {}
+    for component in components:
+        correlation = max_normalized_correlation(final_audio, decode_audio(ffmpeg, component))
+        correlations[component.stem] = round(correlation, 4)
+        if correlation < 0.015:
+            errors.append(f"audio component is not detectably present in final mix: {component.name}")
+    checks["audio_component_correlations"] = correlations
+
+
+def frame_bytes(ffmpeg: str, path: Path, at: float) -> bytes:
+    completed = subprocess.run(
+        [ffmpeg, "-v", "error", "-ss", f"{at:.3f}", "-i", str(path), "-vf", "scale=180:320,format=gray", "-frames:v", "1", "-f", "rawvideo", "-"],
+        check=True,
+        capture_output=True,
+    )
+    return completed.stdout
+
+
+def check_caption_burn(
+    ffmpeg: str,
+    clean_video: Path,
+    final_video: Path,
+    cue_midpoints: list[float],
+    errors: list[str],
+    checks: dict[str, Any],
+) -> None:
+    if not cue_midpoints:
+        errors.append("no caption cues available for burn verification")
+        return
+    sample_times = cue_midpoints if len(cue_midpoints) <= 8 else cue_midpoints[::max(1, len(cue_midpoints) // 8)][:8]
+    changed = 0
+    differences: list[float] = []
+    for at in sample_times:
+        clean = frame_bytes(ffmpeg, clean_video, at)
+        final = frame_bytes(ffmpeg, final_video, at)
+        if not clean or len(clean) != len(final):
+            errors.append(f"could not compare caption frame at {at:.3f}s")
+            continue
+        mean_difference = sum(abs(a - b) for a, b in zip(clean, final)) / len(clean)
+        differences.append(round(mean_difference, 4))
+        if mean_difference >= 0.35:
+            changed += 1
+    checks["caption_frame_mean_differences"] = differences
+    checks["caption_frames_changed"] = changed
+    required = max(1, math.ceil(len(sample_times) * 0.75))
+    if changed < required:
+        errors.append(f"caption burn is not visible in enough sampled frames: {changed}/{len(sample_times)}")
 
 
 def check_audio_components(
@@ -154,6 +255,7 @@ def check_receipt(receipt: dict[str, Any], errors: list[str], warnings: list[str
 def main() -> int:
     args = parse_args()
     video = args.video.expanduser().resolve()
+    clean_video = args.clean_video.expanduser().resolve()
     receipt_path = args.receipt.expanduser().resolve()
     script_path = args.script.expanduser().resolve()
     srt_path = args.srt.expanduser().resolve()
@@ -163,11 +265,13 @@ def main() -> int:
 
     if not video.is_file():
         raise SystemExit(f"Video not found: {video}")
+    if not clean_video.is_file():
+        raise SystemExit(f"Clean video not found: {clean_video}")
     if not receipt_path.is_file():
         raise SystemExit(f"Receipt not found: {receipt_path}")
     receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
     check_receipt(receipt, errors, warnings)
-    caption_end = check_captions(script_path, srt_path, errors, checks)
+    caption_end, cue_midpoints = check_captions(script_path, srt_path, errors, checks)
     project_root = receipt_path.parent.parent.resolve()
     audio_components = check_audio_components(receipt, project_root, errors, checks)
 
@@ -214,7 +318,7 @@ def main() -> int:
             if not any(stream.get("codec_type") == "audio" for stream in component_probe.get("streams", [])):
                 errors.append(f"audio component has no audio stream: {component.name}")
     else:
-        warnings.append("ffprobe is unavailable; stream and duration checks were skipped")
+        errors.append("ffprobe is required for delivery validation")
 
     ffmpeg = shutil.which("ffmpeg")
     if ffmpeg:
@@ -227,8 +331,10 @@ def main() -> int:
         if decoded.returncode != 0:
             errors.append("full MP4 decode failed")
             warnings.append(decoded.stderr.strip()[-500:])
+        check_audio_mix(ffmpeg, video, audio_components, errors, checks)
+        check_caption_burn(ffmpeg, clean_video, video, cue_midpoints, errors, checks)
     else:
-        warnings.append("ffmpeg is unavailable; full decode was skipped")
+        errors.append("ffmpeg is required for delivery validation")
 
     report = {
         "status": "pass" if not errors else "fail",

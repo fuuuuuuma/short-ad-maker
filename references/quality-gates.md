@@ -38,4 +38,4 @@
 - 最終発話の後に短い余韻があり、途中で終わらない
 - 完成MP4、企画、原稿、字幕、制作記録、検証レポートを保存した
 
-`reports/delivery-receipt.json` には最低限、`caption_coverage`、`caption_timing_source`、`narration_continuous`、`voice_speed`、`hook_end_seconds`、`median_shot_seconds`、`rights_checked`、`facts_checked`、`visual_reviewed`、`audio_components` を記録する。検証時は最終MP4、原稿TXT、SRT、ナレーション・BGM・SEの実ファイルを照合する。
+`reports/delivery-receipt.json` には最低限、`caption_coverage`、`caption_timing_source`、`narration_continuous`、`voice_speed`、`hook_end_seconds`、`median_shot_seconds`、`rights_checked`、`facts_checked`、`visual_reviewed`、`audio_components` を記録する。`audio_components` は完成タイムラインと同じ開始時刻・長さの音声ステムを指す。検証時は最終MP4、字幕前クリーンMP4、原稿TXT、SRT、ナレーション・BGM・SEの実ファイルを照合する。

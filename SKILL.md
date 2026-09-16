@@ -34,7 +34,7 @@ metadata:
 8. 画は話速ではなく意味と動作で切る。通常ショットは1.2〜2.6秒を目安にし、冒頭3秒だけ0.5〜1.2秒の短い変化を許す。同じ動作へ時間を戻さない。
 9. BGMはナレーションより十分小さくし、効果音はフック、商品切替、CTAなど意味のある箇所だけに置く。商用利用可能な音源だけ使う。
 10. 全文字幕は最終音声を音声認識して時刻を取り、原稿の表記に戻す。1画面10〜18字程度、1〜2行、下部中央、太めのゴシック、白文字と細い黒縁を既定にする。商品名や文節を途中で分断しない。上部・サイドの固定表示は目的がなければ置かない。
-11. [references/quality-gates.md](references/quality-gates.md) に従い、可能なら独立した視覚レビューも行う。`scripts/validate_delivery.py <mp4> --receipt <json> --script <txt> --srt <srt>` で実ファイルと制作記録を検証し、エラーを直してから納品する。
+11. 字幕前のクリーン映像と、タイムラインに合わせたナレーション・BGM・SEの各音声ファイルを残す。[references/quality-gates.md](references/quality-gates.md) に従い、可能なら独立した視覚レビューも行う。`scripts/validate_delivery.py <mp4> --clean-video <mp4> --receipt <json> --script <txt> --srt <srt>` で字幕焼き込み、音声ミックス、制作記録を検証し、エラーを直してから納品する。
 
 ## 冒頭3秒
 
