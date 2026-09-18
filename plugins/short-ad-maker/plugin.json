@@ -1,0 +1,10 @@
+{
+  "name": "short-ad-maker",
+  "version": "1.1.0",
+  "description": "縦型広告ショート動画制作、無音ジェットカット、高速SRT字幕生成を完結させるCodex & Antigravityプラグイン",
+  "author": {
+    "name": "fuuuuuuma",
+    "url": "https://github.com/fuuuuuuma"
+  },
+  "skills": "./skills/"
+}

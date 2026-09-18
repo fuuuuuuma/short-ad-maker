@@ -1,7 +1,7 @@
 {
   "name": "short-ad-maker",
-  "version": "1.0.0",
-  "description": "商品画像・URL・説明から、縦型広告ショートを企画・生成・編集し、全文字幕・BGM・SE入りMP4まで仕上げる。",
+  "version": "1.1.0",
+  "description": "縦型広告ショート動画制作、無音ジェットカット(/cut)、高速SRT字幕生成(/srt-fast)を同封したプラグイン。",
   "author": {
     "name": "fuuuuuuma"
   },

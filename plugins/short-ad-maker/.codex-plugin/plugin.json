@@ -1,7 +1,7 @@
 {
   "name": "short-ad-maker",
-  "version": "1.0.0",
-  "description": "商品画像・URL・説明から、縦型広告ショートを企画・生成・編集し、全文字幕・BGM・SE入りMP4まで仕上げるCodexプラグイン。",
+  "version": "1.1.0",
+  "description": "商品画像・URL・説明から縦型広告ショートを企画・生成・編集しMP4まで仕上げる機能に加え、無音ジェットカット(/cut)と高速SRT字幕生成(/srt-fast)を同封したCodex & Antigravityプラグイン。",
   "author": {
     "name": "fuuuuuuma",
     "url": "https://github.com/fuuuuuuma"
@@ -9,20 +9,20 @@
   "homepage": "https://fuuuuuuma.github.io/short-ad-maker/",
   "repository": "https://github.com/fuuuuuuma/short-ad-maker",
   "license": "MIT",
-  "keywords": ["short-video", "advertising", "reels", "tiktok", "youtube-shorts", "video-editing"],
+  "keywords": ["short-video", "advertising", "reels", "tiktok", "youtube-shorts", "video-editing", "silence-cut", "subtitles", "srt"],
   "skills": "./skills/",
   "interface": {
     "displayName": "Short Ad Maker",
-    "shortDescription": "商品から縦型広告ショートをMP4まで制作",
-    "longDescription": "商品画像、URL、短い説明から、企画、AI素材、ナレーション、全文字幕、BGM、効果音を組み、Reels、TikTok、YouTube Shorts向けMP4まで仕上げます。",
+    "shortDescription": "広告ショート制作・無音カット・高速字幕生成",
+    "longDescription": "縦型広告ショートの全工程自動制作（企画・素材・ナレーション・字幕・BGM/SE）に加えて、Premiere Pro XMLの無音自動ジェットカット(/cut)およびApple GPU/Whisperによる高速SRT字幕生成(/srt-fast)をまとめて提供します。",
     "developerName": "fuuuuuuma",
     "category": "Productivity",
     "capabilities": ["Write"],
     "websiteURL": "https://fuuuuuuma.github.io/short-ad-maker/",
     "defaultPrompt": [
       "商品画像から20秒のVlog風広告ショートをMP4まで作って。",
-      "この商品の広告ショートを女性起用で企画から完成まで進めて。",
-      "顔出しなしの縦型商品広告を全文字幕つきで作って。"
+      "/cut /path/to/timeline.xml",
+      "/srt-fast /path/to/audio.wav"
     ],
     "brandColor": "#D61F69"
   }
