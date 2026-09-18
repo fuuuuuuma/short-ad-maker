@@ -32,7 +32,7 @@ if [ -z "$PREPARE_SCRIPT" ] || [ ! -f "$PREPARE_SCRIPT" ]; then
   PREPARE_SCRIPT="$(dirname "$0")/scripts/chunk_tools/prepare_text_parts.py"
 fi
 if [ ! -f "$PREPARE_SCRIPT" ]; then
-  PREPARE_SCRIPT="/Users/kawamurafuushin/ClaudeCode/projects/常時運用/premiere-skills/scripts/chunk_tools/prepare_text_parts.py"
+  PREPARE_SCRIPT="$HOME/.claude/scripts/chunk_tools/prepare_text_parts.py"
 fi
 SCRIPTS_DIR="$(dirname "$PREPARE_SCRIPT")/.."
 WHISPER_SCRIPT="$SCRIPTS_DIR/whisper_to_srt.py"

@@ -44,7 +44,7 @@ if [ -z "$SCRIPT" ] || [ ! -f "$SCRIPT" ]; then
   SCRIPT="$(dirname "$0")/scripts/silence_cut.py"
 fi
 if [ ! -f "$SCRIPT" ]; then
-  SCRIPT="/Users/kawamurafuushin/ClaudeCode/projects/常時運用/premiere-skills/scripts/silence_cut.py"
+  SCRIPT="$HOME/.claude/scripts/silence_cut.py"
 fi
 
 XML_PATH="<XMLファイルの絶対パス>"
